@@ -10,7 +10,7 @@ export class UpdatePaymentMethodDto {
   @IsString()
   @MinLength(2)
   displayName?: string;
-  
+
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

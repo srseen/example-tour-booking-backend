@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
@@ -13,14 +18,16 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ user: User; access_token: string }> {
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ user: User; access_token: string }> {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
 
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    
+
     const user = await this.usersService.create({
       ...registerDto,
       password: hashedPassword,
@@ -37,32 +44,34 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
-    
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    
+
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
     }
-    
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    
+
     return user;
   }
 
-  async login(loginDto: LoginDto): Promise<{ user: User; access_token: string }> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ user: User; access_token: string }> {
     const user = await this.validateUser(loginDto.email, loginDto.password);
-    
-    const payload = { 
-      sub: user.id, 
-      email: user.email, 
-      role: user.role 
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
     };
-    
+
     const access_token = this.jwtService.sign(payload);
 
     return {
@@ -77,17 +86,17 @@ export class AuthService {
 
   async refreshToken(userId: number): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(userId);
-    
+
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
     }
-    
-    const payload = { 
-      sub: user.id, 
-      email: user.email, 
-      role: user.role 
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
     };
-    
+
     return {
       access_token: this.jwtService.sign(payload),
     };

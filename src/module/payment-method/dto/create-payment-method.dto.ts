@@ -8,7 +8,7 @@ export class CreatePaymentMethodDto {
   @IsString()
   @MinLength(2)
   displayName: string;
-  
+
   @IsOptional()
   @IsBoolean()
   isActive?: boolean = true;

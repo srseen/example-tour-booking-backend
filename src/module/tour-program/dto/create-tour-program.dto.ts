@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsNumber, IsInt, Min, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsInt,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateTourProgramDto {
   @IsString()

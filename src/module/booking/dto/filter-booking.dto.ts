@@ -1,4 +1,11 @@
-import { IsOptional, IsString, IsInt, IsDateString, IsNumber, Min } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsInt,
+  IsDateString,
+  IsNumber,
+  Min,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class FilterBookingDto {

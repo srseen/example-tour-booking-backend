@@ -1,9 +1,9 @@
-import { 
-  Body, 
-  Controller, 
-  Post, 
-  Get, 
-  UseGuards, 
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
   Request,
   UseInterceptors,
   ClassSerializerInterceptor,

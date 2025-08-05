@@ -1,5 +1,12 @@
 // src/users/user.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Booking } from '../../booking/entities/booking.entity';
 import { Exclude } from 'class-transformer';
 

@@ -65,12 +65,15 @@ export class UsersController {
 
   @Patch('change-password')
   @Roles('admin', 'manager', 'staff')
-  async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
+  async changePassword(
+    @Request() req,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
     const userId = req.user.userId;
     await this.usersService.changePassword(
       userId,
       changePasswordDto.currentPassword,
-      changePasswordDto.newPassword
+      changePasswordDto.newPassword,
     );
     return { message: 'Password changed successfully' };
   }

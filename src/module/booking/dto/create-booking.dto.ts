@@ -1,11 +1,11 @@
-import { 
-  IsDateString, 
-  IsInt, 
-  IsOptional, 
-  IsString, 
-  IsNumber, 
-  Min, 
-  ValidateNested 
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsNumber,
+  Min,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateBookingPassengerDto } from '../../booking-passenger/dto/create-booking-passenger.dto';
