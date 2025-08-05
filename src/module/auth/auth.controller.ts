@@ -30,13 +30,13 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  getProfile(@Request() req) {
-    return this.authService.getProfile(req.user.userId);
+  getProfile(@Request() req: { user: { id: number } }) {
+    return this.authService.getProfile(req.user.id);
   }
 
   @Post('refresh')
   @UseGuards(AuthGuard('jwt'))
-  refreshToken(@Request() req) {
-    return this.authService.refreshToken(req.user.userId);
+  refreshToken(@Request() req: { user: { id: number } }) {
+    return this.authService.refreshToken(req.user.id);
   }
 }
