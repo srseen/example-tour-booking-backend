@@ -1,18 +1,15 @@
-import { IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, MinLength } from 'class-validator';
+
 export class CreatePaymentMethodDto {
-  @IsInt()
-  bookingId: number;
-
-  @IsNumber()
-  totalPrice: number;
-
-  @IsNumber()
-  deposit: number;
-
-  @IsNumber()
-  cashOnTour: number;
-
-  @IsOptional()
   @IsString()
-  paymentMethod?: string;
+  @MinLength(2)
+  name: string;
+
+  @IsString()
+  @MinLength(2)
+  displayName: string;
+  
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean = true;
 }
