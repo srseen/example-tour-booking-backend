@@ -1,6 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -10,22 +13,81 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(email: string, password: string, role: string) {
-    const hashed = await bcrypt.hash(password, 10);
-    return this.usersService.create({ email, password: hashed, role });
+  async register(registerDto: RegisterDto): Promise<{ user: User; access_token: string }> {
+    const existingUser = await this.usersService.findByEmail(registerDto.email);
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+    
+    const user = await this.usersService.create({
+      ...registerDto,
+      password: hashedPassword,
+    });
+
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    const access_token = this.jwtService.sign(payload);
+
+    return {
+      user,
+      access_token,
+    };
   }
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    
+    if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+    
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    
     return user;
   }
 
-  async login(email: string, password: string) {
-    const user = await this.validateUser(email, password);
-    const payload = { sub: user.id, role: user.role };
+  async login(loginDto: LoginDto): Promise<{ user: User; access_token: string }> {
+    const user = await this.validateUser(loginDto.email, loginDto.password);
+    
+    const payload = { 
+      sub: user.id, 
+      email: user.email, 
+      role: user.role 
+    };
+    
+    const access_token = this.jwtService.sign(payload);
+
+    return {
+      user,
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async getProfile(userId: number): Promise<User> {
+    return this.usersService.findOne(userId);
+  }
+
+  async refreshToken(userId: number): Promise<{ access_token: string }> {
+    const user = await this.usersService.findOne(userId);
+    
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+    
+    const payload = { 
+      sub: user.id, 
+      email: user.email, 
+      role: user.role 
+    };
+    
     return {
       access_token: this.jwtService.sign(payload),
     };
