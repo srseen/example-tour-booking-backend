@@ -15,12 +15,12 @@ import { PaymentMethodService } from './payment-method.service';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
 import { FilterPaymentMethodDto } from './dto/filter-payment-method.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('payment-method')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class PaymentMethodController {
   constructor(private readonly paymentMethodService: PaymentMethodService) {}

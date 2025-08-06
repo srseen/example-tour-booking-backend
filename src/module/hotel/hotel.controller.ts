@@ -15,12 +15,12 @@ import { HotelService } from './hotel.service';
 import { CreateHotelDto } from './dto/create-hotel.dto';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { FilterHotelDto } from './dto/filter-hotel.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('hotel')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class HotelController {
   constructor(private readonly hotelService: HotelService) {}

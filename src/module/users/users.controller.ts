@@ -15,14 +15,14 @@ import {
 import { UsersService } from './users.service';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FilterUserDto } from './dto/filter-user.dto';
 import { ChangePasswordDto } from '../auth/dto/change-password.dto';
 
 @Controller('users')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

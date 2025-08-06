@@ -16,12 +16,12 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { FilterBookingDto } from './dto/filter-booking.dto';
 import { UpdateBookingStatusDto } from './dto/booking-status.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('booking')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}

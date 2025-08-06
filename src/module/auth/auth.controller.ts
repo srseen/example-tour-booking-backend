@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -29,12 +30,14 @@ export class AuthController {
   }
 
   @Get('profile')
+  @UseGuards(JwtAuthGuard)
   @UseGuards(AuthGuard('jwt'))
   getProfile(@Request() req: { user: { id: number } }) {
     return this.authService.getProfile(req.user.id);
   }
 
   @Post('refresh')
+  @UseGuards(JwtAuthGuard)
   @UseGuards(AuthGuard('jwt'))
   refreshToken(@Request() req: { user: { id: number } }) {
     return this.authService.refreshToken(req.user.id);

@@ -15,12 +15,12 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { FilterCustomerDto } from './dto/filter-customer.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('customer')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}

@@ -13,12 +13,12 @@ import {
 import { BookingPassengerService } from './booking-passenger.service';
 import { CreateBookingPassengerDto } from './dto/create-booking-passenger.dto';
 import { UpdateBookingPassengerDto } from './dto/update-booking-passenger.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('booking-passenger')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class BookingPassengerController {
   constructor(

@@ -15,12 +15,12 @@ import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { FilterContactDto } from './dto/filter-contact.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('contact')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
