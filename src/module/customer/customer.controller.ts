@@ -6,31 +6,45 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { FilterCustomerDto } from './dto/filter-customer.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('customer')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Post()
+  @Roles('admin', 'manager', 'staff')
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customerService.create(createCustomerDto);
   }
 
   @Get()
-  findAll() {
-    return this.customerService.findAll();
+  @Roles('admin', 'manager', 'staff')
+  findAll(@Query() filterDto: FilterCustomerDto) {
+    return this.customerService.findAll(filterDto);
   }
 
   @Get(':id')
+  @Roles('admin', 'manager', 'staff')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(+id);
   }
 
   @Patch(':id')
+  @Roles('admin', 'manager', 'staff')
   update(
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
@@ -39,6 +53,7 @@ export class CustomerController {
   }
 
   @Delete(':id')
+  @Roles('admin', 'manager')
   remove(@Param('id') id: string) {
     return this.customerService.remove(+id);
   }

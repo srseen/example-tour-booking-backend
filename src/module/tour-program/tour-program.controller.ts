@@ -6,31 +6,45 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { TourProgramService } from './tour-program.service';
 import { CreateTourProgramDto } from './dto/create-tour-program.dto';
 import { UpdateTourProgramDto } from './dto/update-tour-program.dto';
+import { FilterTourProgramDto } from './dto/filter-tour-program.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('tour-program')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseInterceptors(ClassSerializerInterceptor)
 export class TourProgramController {
   constructor(private readonly tourProgramService: TourProgramService) {}
 
   @Post()
+  @Roles('admin', 'manager')
   create(@Body() createTourProgramDto: CreateTourProgramDto) {
     return this.tourProgramService.create(createTourProgramDto);
   }
 
   @Get()
-  findAll() {
-    return this.tourProgramService.findAll();
+  @Roles('admin', 'manager', 'staff')
+  findAll(@Query() filterDto: FilterTourProgramDto) {
+    return this.tourProgramService.findAll(filterDto);
   }
 
   @Get(':id')
+  @Roles('admin', 'manager', 'staff')
   findOne(@Param('id') id: string) {
     return this.tourProgramService.findOne(+id);
   }
 
   @Patch(':id')
+  @Roles('admin', 'manager')
   update(
     @Param('id') id: string,
     @Body() updateTourProgramDto: UpdateTourProgramDto,
@@ -39,6 +53,7 @@ export class TourProgramController {
   }
 
   @Delete(':id')
+  @Roles('admin')
   remove(@Param('id') id: string) {
     return this.tourProgramService.remove(+id);
   }
