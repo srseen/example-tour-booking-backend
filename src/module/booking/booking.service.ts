@@ -23,7 +23,8 @@ export class BookingService {
 
     // Create booking passenger first
     const bookingPassenger = this.bookingPassengerRepository.create(passenger);
-    const savedPassenger = await this.bookingPassengerRepository.save(bookingPassenger);
+    const savedPassenger =
+      await this.bookingPassengerRepository.save(bookingPassenger);
 
     // Create booking with passenger
     const booking = this.bookingRepository.create({
@@ -84,7 +85,9 @@ export class BookingService {
     }
 
     if (tourDateFrom) {
-      queryBuilder.andWhere('booking.tourDate >= :tourDateFrom', { tourDateFrom });
+      queryBuilder.andWhere('booking.tourDate >= :tourDateFrom', {
+        tourDateFrom,
+      });
     }
 
     if (tourDateTo) {
@@ -92,7 +95,9 @@ export class BookingService {
     }
 
     if (createdFrom) {
-      queryBuilder.andWhere('booking.createdAt >= :createdFrom', { createdFrom });
+      queryBuilder.andWhere('booking.createdAt >= :createdFrom', {
+        createdFrom,
+      });
     }
 
     if (createdTo) {
@@ -100,11 +105,15 @@ export class BookingService {
     }
 
     if (minTotalPrice) {
-      queryBuilder.andWhere('booking.totalPrice >= :minTotalPrice', { minTotalPrice });
+      queryBuilder.andWhere('booking.totalPrice >= :minTotalPrice', {
+        minTotalPrice,
+      });
     }
 
     if (maxTotalPrice) {
-      queryBuilder.andWhere('booking.totalPrice <= :maxTotalPrice', { maxTotalPrice });
+      queryBuilder.andWhere('booking.totalPrice <= :maxTotalPrice', {
+        maxTotalPrice,
+      });
     }
 
     if (bookedById) {
@@ -112,7 +121,9 @@ export class BookingService {
     }
 
     if (confirmedById) {
-      queryBuilder.andWhere('booking.confirmedById = :confirmedById', { confirmedById });
+      queryBuilder.andWhere('booking.confirmedById = :confirmedById', {
+        confirmedById,
+      });
     }
 
     const [bookings, total] = await queryBuilder
@@ -151,7 +162,10 @@ export class BookingService {
     return booking;
   }
 
-  async update(id: number, updateBookingDto: UpdateBookingDto): Promise<Booking> {
+  async update(
+    id: number,
+    updateBookingDto: UpdateBookingDto,
+  ): Promise<Booking> {
     const booking = await this.findOne(id);
     const { passenger, ...bookingData } = updateBookingDto;
 
@@ -166,12 +180,20 @@ export class BookingService {
     return this.bookingRepository.save(booking);
   }
 
-  async updateStatus(id: number, updateStatusDto: UpdateBookingStatusDto): Promise<Booking> {
+  async updateStatus(
+    id: number,
+    updateStatusDto: UpdateBookingStatusDto,
+  ): Promise<Booking> {
     const booking = await this.findOne(id);
-    
+
     // Validate status transition
-    if (booking.status === BookingStatus.CANCELLED && updateStatusDto.status !== BookingStatus.CANCELLED) {
-      throw new BadRequestException('Cannot change status of cancelled booking');
+    if (
+      booking.status === BookingStatus.CANCELLED &&
+      updateStatusDto.status !== BookingStatus.CANCELLED
+    ) {
+      throw new BadRequestException(
+        'Cannot change status of cancelled booking',
+      );
     }
 
     booking.status = updateStatusDto.status;
@@ -180,7 +202,7 @@ export class BookingService {
 
   async remove(id: number): Promise<void> {
     const booking = await this.findOne(id);
-    
+
     // Only allow deletion of pending bookings
     if (booking.status !== BookingStatus.PENDING) {
       throw new BadRequestException('Can only delete pending bookings');

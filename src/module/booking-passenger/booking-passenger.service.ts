@@ -13,8 +13,12 @@ export class BookingPassengerService {
     private readonly bookingPassengerRepository: Repository<BookingPassenger>,
   ) {}
 
-  async create(createBookingPassengerDto: CreateBookingPassengerDto): Promise<BookingPassenger> {
-    const bookingPassenger = this.bookingPassengerRepository.create(createBookingPassengerDto);
+  async create(
+    createBookingPassengerDto: CreateBookingPassengerDto,
+  ): Promise<BookingPassenger> {
+    const bookingPassenger = this.bookingPassengerRepository.create(
+      createBookingPassengerDto,
+    );
     return this.bookingPassengerRepository.save(bookingPassenger);
   }
 

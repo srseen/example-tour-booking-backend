@@ -14,7 +14,9 @@ export class TourProgramService {
     private readonly tourProgramRepository: Repository<TourProgram>,
   ) {}
 
-  async create(createTourProgramDto: CreateTourProgramDto): Promise<TourProgram> {
+  async create(
+    createTourProgramDto: CreateTourProgramDto,
+  ): Promise<TourProgram> {
     const tourProgram = this.tourProgramRepository.create(createTourProgramDto);
     return this.tourProgramRepository.save(tourProgram);
   }
@@ -31,7 +33,8 @@ export class TourProgramService {
       limit = 10,
     } = filterDto || {};
 
-    const queryBuilder = this.tourProgramRepository.createQueryBuilder('program');
+    const queryBuilder =
+      this.tourProgramRepository.createQueryBuilder('program');
 
     if (search) {
       queryBuilder.where(
@@ -57,11 +60,15 @@ export class TourProgramService {
     }
 
     if (minDuration) {
-      queryBuilder.andWhere('program.duration >= :minDuration', { minDuration });
+      queryBuilder.andWhere('program.duration >= :minDuration', {
+        minDuration,
+      });
     }
 
     if (maxDuration) {
-      queryBuilder.andWhere('program.duration <= :maxDuration', { maxDuration });
+      queryBuilder.andWhere('program.duration <= :maxDuration', {
+        maxDuration,
+      });
     }
 
     const [programs, total] = await queryBuilder

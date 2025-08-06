@@ -14,7 +14,9 @@ export class PaymentMethodService {
     private readonly paymentMethodRepository: Repository<PaymentMethod>,
   ) {}
 
-  async create(createPaymentMethodDto: CreatePaymentMethodDto): Promise<PaymentMethod> {
+  async create(
+    createPaymentMethodDto: CreatePaymentMethodDto,
+  ): Promise<PaymentMethod> {
     // Check if name already exists
     const existingPaymentMethod = await this.paymentMethodRepository.findOne({
       where: { name: createPaymentMethodDto.name },
@@ -23,14 +25,17 @@ export class PaymentMethodService {
       throw new ConflictException('Payment method name already exists');
     }
 
-    const paymentMethod = this.paymentMethodRepository.create(createPaymentMethodDto);
+    const paymentMethod = this.paymentMethodRepository.create(
+      createPaymentMethodDto,
+    );
     return this.paymentMethodRepository.save(paymentMethod);
   }
 
   async findAll(filterDto?: FilterPaymentMethodDto) {
     const { search, isActive, page = 1, limit = 10 } = filterDto || {};
 
-    const queryBuilder = this.paymentMethodRepository.createQueryBuilder('paymentMethod');
+    const queryBuilder =
+      this.paymentMethodRepository.createQueryBuilder('paymentMethod');
 
     if (search) {
       queryBuilder.where(
@@ -76,7 +81,10 @@ export class PaymentMethodService {
     const paymentMethod = await this.findOne(id);
 
     // Check if name already exists (if being updated)
-    if (updatePaymentMethodDto.name && updatePaymentMethodDto.name !== paymentMethod.name) {
+    if (
+      updatePaymentMethodDto.name &&
+      updatePaymentMethodDto.name !== paymentMethod.name
+    ) {
       const existingPaymentMethod = await this.paymentMethodRepository.findOne({
         where: { name: updatePaymentMethodDto.name },
       });
