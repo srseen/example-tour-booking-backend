@@ -6,9 +6,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { Booking } from '../../booking/entities/booking.entity';
 import { Exclude } from 'class-transformer';
 
@@ -50,15 +48,6 @@ export class User {
 
   @OneToMany(() => Booking, (booking) => booking.confirmedBy)
   bookingsConfirmed: Booking[];
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
-
-  async validatePassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
-  }
 
   hasRole(role: UserRole): boolean {
     return this.role === role;
