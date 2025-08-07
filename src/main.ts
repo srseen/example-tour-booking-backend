@@ -41,8 +41,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('The API description')
+    .setTitle('Tour booking API')
+    .setDescription('API documentation for the Tour booking application.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -51,7 +51,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
   console.log(
-    `Application is running on: http://localhost:${process.env.PORT ?? 3000}`,
+    `Application is running on: http://localhost:${process.env.PORT ?? 3000}/api/v1`,
+  );
+  console.log(
+    `Swagger is available on: http://localhost:${process.env.PORT ?? 3000}/docs`,
   );
 }
 bootstrap().catch((error) => {
