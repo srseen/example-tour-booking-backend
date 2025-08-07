@@ -6,6 +6,7 @@ import {
   AllExceptionsFilter,
 } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,6 +39,15 @@ async function bootstrap() {
 
   // Set global prefix
   app.setGlobalPrefix('api/v1');
+
+  const config = new DocumentBuilder()
+    .setTitle('API')
+    .setDescription('The API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
   console.log(
