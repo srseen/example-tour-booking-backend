@@ -42,7 +42,10 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login a user' })
-  @ApiResponse({ status: 200, description: 'The user has been successfully logged in.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully logged in.',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -52,7 +55,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user profile' })
-  @ApiResponse({ status: 200, description: 'The user profile has been successfully retrieved.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user profile has been successfully retrieved.',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   getProfile(@Request() req: any) {
     return this.authService.getProfile(req.user.id);
@@ -63,7 +69,10 @@ export class AuthController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh access token' })
-  @ApiResponse({ status: 200, description: 'The access token has been successfully refreshed.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The access token has been successfully refreshed.',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   refreshToken(@Request() req: any) {
     return this.authService.refreshToken(req.user.id);
