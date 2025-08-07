@@ -1,0 +1,33 @@
+# Ignore .git directory
+.git
+
+# Ignore .dockerignore file itself
+.dockerignore
+
+# Ignore Dockerfile
+Dockerfile
+
+# Ignore node_modules directory
+node_modules
+
+# Ignore build artifacts
+build
+dist
+
+# Ignore logs
+logs
+*.log
+
+# Ignore environment variables file
+.env
+.env.*
+
+# Ignore npm debug log
+npm-debug.log
+
+# Ignore editor/IDE specific files
+.vscode
+.idea
+*.swp
+*.bak
+*~
