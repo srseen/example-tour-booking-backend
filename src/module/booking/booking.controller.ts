@@ -19,6 +19,7 @@ import { UpdateBookingStatusDto } from './dto/booking-status.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UserRole } from '../users/entities/user.entity';
 
 @Controller('booking')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,37 +28,37 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Post()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   create(@Body() createBookingDto: CreateBookingDto) {
     return this.bookingService.create(createBookingDto);
   }
 
   @Get()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findAll(@Query() filterDto: FilterBookingDto) {
     return this.bookingService.findAll(filterDto);
   }
 
   @Get('stats')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   getStats() {
     return this.bookingService.getBookingStats();
   }
 
   @Get(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findOne(@Param('id') id: string) {
     return this.bookingService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
     return this.bookingService.update(+id, updateBookingDto);
   }
 
   @Patch(':id/status')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   updateStatus(
     @Param('id') id: string,
     @Body() updateStatusDto: UpdateBookingStatusDto,
@@ -66,7 +67,7 @@ export class BookingController {
   }
 
   @Delete(':id')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   remove(@Param('id') id: string) {
     return this.bookingService.remove(+id);
   }

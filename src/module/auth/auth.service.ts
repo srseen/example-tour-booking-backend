@@ -63,26 +63,43 @@ export class AuthService {
   async login(
     loginDto: LoginDto,
   ): Promise<{ user: User; access_token: string }> {
-    const user = await this.validateUser(loginDto.email, loginDto.password);
+    try {
+      const user = await this.validateUser(loginDto.email, loginDto.password);
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    };
+      const payload = {
+        sub: user.id,
+        email: user.email,
+        role: user.role,
+      };
 
-    return {
-      user,
-      access_token: this.jwtService.sign(payload),
-    };
+      const access_token = this.jwtService.sign(payload);
+
+      return {
+        user,
+        access_token,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Login failed');
+    }
   }
 
   async getProfile(userId: number): Promise<User> {
-    return this.usersService.findOne(userId);
+    const user = await this.usersService.findOne(userId);
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('User not found or inactive');
+    }
+    return user;
   }
 
   async refreshToken(userId: number): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(userId);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
 
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
