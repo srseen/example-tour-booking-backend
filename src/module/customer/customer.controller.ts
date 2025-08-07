@@ -18,6 +18,7 @@ import { FilterCustomerDto } from './dto/filter-customer.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UserRole } from '../users/entities/user.entity';
 
 @Controller('customer')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,25 +27,25 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Post()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customerService.create(createCustomerDto);
   }
 
   @Get()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findAll(@Query() filterDto: FilterCustomerDto) {
     return this.customerService.findAll(filterDto);
   }
 
   @Get(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   update(
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
@@ -53,7 +54,7 @@ export class CustomerController {
   }
 
   @Delete(':id')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   remove(@Param('id') id: string) {
     return this.customerService.remove(+id);
   }

@@ -16,6 +16,7 @@ import { UpdateBookingPassengerDto } from './dto/update-booking-passenger.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UserRole } from '../../module/users/entities/user.entity';
 
 @Controller('booking-passenger')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,25 +27,25 @@ export class BookingPassengerController {
   ) {}
 
   @Post()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   create(@Body() createBookingPassengerDto: CreateBookingPassengerDto) {
     return this.bookingPassengerService.create(createBookingPassengerDto);
   }
 
   @Get()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findAll() {
     return this.bookingPassengerService.findAll();
   }
 
   @Get(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findOne(@Param('id') id: string) {
     return this.bookingPassengerService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   update(
     @Param('id') id: string,
     @Body() updateBookingPassengerDto: UpdateBookingPassengerDto,
@@ -53,7 +54,7 @@ export class BookingPassengerController {
   }
 
   @Delete(':id')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   remove(@Param('id') id: string) {
     return this.bookingPassengerService.remove(+id);
   }

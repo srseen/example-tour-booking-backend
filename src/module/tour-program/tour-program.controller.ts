@@ -18,6 +18,7 @@ import { FilterTourProgramDto } from './dto/filter-tour-program.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UserRole } from '../users/entities/user.entity';
 
 @Controller('tour-program')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,25 +27,25 @@ export class TourProgramController {
   constructor(private readonly tourProgramService: TourProgramService) {}
 
   @Post()
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   create(@Body() createTourProgramDto: CreateTourProgramDto) {
     return this.tourProgramService.create(createTourProgramDto);
   }
 
   @Get()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findAll(@Query() filterDto: FilterTourProgramDto) {
     return this.tourProgramService.findAll(filterDto);
   }
 
   @Get(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findOne(@Param('id') id: string) {
     return this.tourProgramService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   update(
     @Param('id') id: string,
     @Body() updateTourProgramDto: UpdateTourProgramDto,
@@ -53,7 +54,7 @@ export class TourProgramController {
   }
 
   @Delete(':id')
-  @Roles('admin')
+  @Roles(UserRole.Admin)
   remove(@Param('id') id: string) {
     return this.tourProgramService.remove(+id);
   }

@@ -18,6 +18,7 @@ import { FilterHotelDto } from './dto/filter-hotel.dto';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { UserRole } from '../users/entities/user.entity';
 
 @Controller('hotel')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -26,31 +27,31 @@ export class HotelController {
   constructor(private readonly hotelService: HotelService) {}
 
   @Post()
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   create(@Body() createHotelDto: CreateHotelDto) {
     return this.hotelService.create(createHotelDto);
   }
 
   @Get()
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findAll(@Query() filterDto: FilterHotelDto) {
     return this.hotelService.findAll(filterDto);
   }
 
   @Get(':id')
-  @Roles('admin', 'manager', 'staff')
+  @Roles(UserRole.Admin, UserRole.Manager, UserRole.Staff)
   findOne(@Param('id') id: string) {
     return this.hotelService.findOne(+id);
   }
 
   @Patch(':id')
-  @Roles('admin', 'manager')
+  @Roles(UserRole.Admin, UserRole.Manager)
   update(@Param('id') id: string, @Body() updateHotelDto: UpdateHotelDto) {
     return this.hotelService.update(+id, updateHotelDto);
   }
 
   @Delete(':id')
-  @Roles('admin')
+  @Roles(UserRole.Admin)
   remove(@Param('id') id: string) {
     return this.hotelService.remove(+id);
   }
